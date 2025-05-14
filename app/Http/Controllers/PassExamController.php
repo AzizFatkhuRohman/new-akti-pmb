@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PassExam;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class PassExamController extends Controller
@@ -12,7 +13,7 @@ class PassExamController extends Controller
      */
     public function index()
     {
-        //
+        return view('pass-exam.index');
     }
 
     /**
@@ -20,7 +21,7 @@ class PassExamController extends Controller
      */
     public function create()
     {
-        //
+        return view('pass-exam.create');
     }
 
     /**
@@ -28,38 +29,52 @@ class PassExamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required',
+            'keterangan' => 'nullable|max:250'
+        ]);
+        $student_id = Student::where('user_id', $request->user_id)->first();
+        PassExam::create([
+            'user_id' => $request->user_id,
+            'student_id' => $student_id,
+            'status' => $request->status,
+            'keterangan' => $request->keterangan
+        ]);
+        return back()->with('success', 'Data peserta pmb lolos TPA berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(PassExam $passExam)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PassExam $passExam)
-    {
-        //
+        return view('pass-exam.show',[
+            'data'=>PassExam::find($id)
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PassExam $passExam)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'status' => 'required',
+            'keterangan' => 'nullable|max:250'
+        ]);
+        PassExam::find($id)->update([
+            'status' => $request->status,
+            'keterangan' => $request->keterangan
+        ]);
+        return back()->with('success', 'Data peserta pmb lolos TPA berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PassExam $passExam)
+    public function destroy($id)
     {
-        //
+        PassExam::find($id)->delete();
     }
 }

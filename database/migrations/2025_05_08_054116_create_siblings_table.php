@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('siblings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->enum('status',['Kaka','Adik']);
             $table->string('nama');
             $table->enum('pendidikan',['Tidak ada','SD','SMP','SMA','S1','S2','S3']);
-            $table->string('pekerjaan')->nullable();
+            $table->enum('pekerjaan',['Pelajar','Wiraswasta','Buruh']);
             $table->timestamps();
         });
     }

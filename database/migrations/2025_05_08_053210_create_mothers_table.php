@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('mothers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->char('nik',16);
             $table->enum('status_ibu',['Kandung','Tiri','Angkat','Wafat']);
             $table->string('nama',50);
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             $table->enum('pendidikan',['Tidak ada','SD','SMP','SMA','S1','S2','S3']);
             $table->string('pekerjaan');
-            $table->integer('penghasilan');
+            $table->decimal('penghasilan',15,2);
             $table->enum('status_pernikahan',['Menikah','Duda']);
             $table->char('province_id', 2);
             $table->char('city_id', 4);

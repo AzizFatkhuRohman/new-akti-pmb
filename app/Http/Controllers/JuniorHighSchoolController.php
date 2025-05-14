@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\JuniorHighSchool;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JuniorHighSchoolController extends Controller
 {
@@ -12,7 +14,7 @@ class JuniorHighSchoolController extends Controller
      */
     public function index()
     {
-        //
+        return view('junior-high-school.index');
     }
 
     /**
@@ -20,7 +22,7 @@ class JuniorHighSchoolController extends Controller
      */
     public function create()
     {
-        //
+        return view('junior-high-school.create');
     }
 
     /**
@@ -28,38 +30,63 @@ class JuniorHighSchoolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required|max:100',
+            'start'=>'required|year',
+            'finish'=>'required|year',
+            'province_id'=>'required',
+            'city_id'=>'required'
+        ]);
+        $student_id = Student::where('user_id',Auth::user()->id)->first();
+        JuniorHighSchool::create([
+            'user_id'=>Auth::user()->id,
+            'student'=>$student_id,
+            'name'=>$request->name,
+            'start'=>$request->start,
+            'finish'=>$request->finish,
+            'province_id'=>$request->province_id,
+            'city_id'=>$request->city_id
+        ]);
+        return back()->with('success','Data sekolah SMP berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(JuniorHighSchool $juniorHighSchool)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(JuniorHighSchool $juniorHighSchool)
-    {
-        //
+        return view('junior-high-school.show',[
+            'data'=>JuniorHighSchool::find($id)
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JuniorHighSchool $juniorHighSchool)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name'=>'required|max:100',
+            'start'=>'required|year',
+            'finish'=>'required|year',
+            'province_id'=>'required',
+            'city_id'=>'required'
+        ]);
+        JuniorHighSchool::find($id)->update([
+            'name'=>$request->name,
+            'start'=>$request->start,
+            'finish'=>$request->finish,
+            'province_id'=>$request->province_id,
+            'city_id'=>$request->city_id
+        ]);
+        return back()->with('success','Data sekolah SMP berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JuniorHighSchool $juniorHighSchool)
+    public function destroy($id)
     {
-        //
+        JuniorHighSchool::find($id)->delete();
     }
 }

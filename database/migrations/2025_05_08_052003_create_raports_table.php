@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('raports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->integer('nilai_mtk_1');
             $table->integer('nilai_indo_1');
             $table->integer('nilai_inggris_1');
@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('nilai_mtk_5')->nullable();
             $table->integer('nilai_indo_5')->nullable();
             $table->integer('nilai_inggris_5')->nullable();
+            $table->string('file');
             $table->timestamps();
         });
     }

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('senior_high_schools', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
-            $table->foreignId('study_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('study_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->year('start');
             $table->year('finish');

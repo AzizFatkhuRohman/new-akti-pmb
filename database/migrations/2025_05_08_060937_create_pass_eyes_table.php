@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('pass_eyes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->decimal('R_SPH', 5, 2);
             $table->decimal('R_CYL', 5, 2);
             $table->decimal('R_AX', 5, 2);
@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->decimal('L_AX', 5, 2);
             $table->enum('status', ['Lulus', 'Tidak']);
             $table->string('keterangan')->nullable();
+            $table->string('file');
             $table->timestamps();
         });
     }

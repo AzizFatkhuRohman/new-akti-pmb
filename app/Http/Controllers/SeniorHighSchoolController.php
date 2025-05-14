@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\SeniorHighSchool;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SeniorHighSchoolController extends Controller
 {
@@ -28,21 +30,32 @@ class SeniorHighSchoolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'study_id'=>'required|exists:studies,id',
+            'name'=>'required|max:200',
+            'start'=>'required|year',
+            'finish'=>'required|year',
+            'province_id'=>'required',
+            'city_id'=>'required'
+        ]);
+        $student_id = Student::where('user_id',Auth::user()->id)->first();
+        SeniorHighSchool::create([
+            'user_id'=>Auth::user()->id,
+            'student_id'=>$student_id,
+            'study_id'=>$request->study_id,
+            'name'=>$request->name,
+            'start'=>$request->start,
+            'finish'=>$request->finish,
+            'province_id'=>$request->province_id,
+            'city_id'=>$request->city_id
+        ]);
+        return back()->with('success','Data SMK berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SeniorHighSchool $seniorHighSchool)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SeniorHighSchool $seniorHighSchool)
+    public function show($id)
     {
         //
     }
@@ -50,16 +63,32 @@ class SeniorHighSchoolController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SeniorHighSchool $seniorHighSchool)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'study_id'=>'required|exists:studies,id',
+            'name'=>'required|max:200',
+            'start'=>'required|year',
+            'finish'=>'required|year',
+            'province_id'=>'required',
+            'city_id'=>'required'
+        ]);
+        SeniorHighSchool::find($id)->update([
+            'study_id'=>$request->study_id,
+            'name'=>$request->name,
+            'start'=>$request->start,
+            'finish'=>$request->finish,
+            'province_id'=>$request->province_id,
+            'city_id'=>$request->city_id
+        ]);
+        return back()->with('success','Data SMK berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SeniorHighSchool $seniorHighSchool)
+    public function destroy($id)
     {
-        //
+        SeniorHighSchool::find($id)->delete();
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sibling;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SiblingController extends Controller
 {
@@ -12,7 +14,7 @@ class SiblingController extends Controller
      */
     public function index()
     {
-        //
+        return view('sibling.index');
     }
 
     /**
@@ -20,7 +22,7 @@ class SiblingController extends Controller
      */
     public function create()
     {
-        //
+        return view('sibling.create');
     }
 
     /**
@@ -28,38 +30,59 @@ class SiblingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'status'=>'required',
+            'nama'=>'required|max:200',
+            'pendidikan'=>'required',
+            'pekerjaan'=>'required'
+        ]);
+        $student_id = Student::where('user_id',Auth::user()->id)->first();
+        Sibling::create([
+            'user_id'=>Auth::user()->id,
+            'student_id'=>$student_id,
+            'status'=>$request->status,
+            'nama'=>$request->nama,
+            'pendidikan'=>$request->pendidikan,
+            'pekerjaan'=>$request->pekerjaan
+        ]);
+        return back()->with('success','Data saudara berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Sibling $sibling)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Sibling $sibling)
-    {
-        //
+        return view('sibling.show',[
+            'data'=>Sibling::find($id)
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sibling $sibling)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'status'=>'required',
+            'nama'=>'required|max:200',
+            'pendidikan'=>'required',
+            'pekerjaan'=>'required'
+        ]);
+        Sibling::find($id)->update([
+            'status'=>$request->status,
+            'nama'=>$request->nama,
+            'pendidikan'=>$request->pendidikan,
+            'pekerjaan'=>$request->pekerjaan
+        ]);
+        return back()->with('success','Data saudara berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sibling $sibling)
+    public function destroy($id)
     {
-        //
+        Sibling::find($id)->delete();
     }
 }

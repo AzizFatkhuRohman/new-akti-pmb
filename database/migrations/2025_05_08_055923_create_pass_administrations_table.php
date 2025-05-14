@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pass_administrations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->enum('status',['Lulus','Tidak']);
             $table->string('keterangan')->nullable();
             $table->timestamps();
